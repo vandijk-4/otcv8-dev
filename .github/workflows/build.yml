@@ -35,6 +35,7 @@ jobs:
             mingw-w64-x86_64-physfs
             mingw-w64-x86_64-libpng
             mingw-w64-x86_64-libjpeg-turbo
+            mingw-w64-x86_64-glew
 
       - name: Configure
         run: |
