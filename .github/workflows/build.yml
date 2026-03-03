@@ -1,4 +1,4 @@
-name: Build OTCv8 Windows (vcpkg MSVC)
+name: Build OTCv8 Windows (Modern CI)
 
 on:
   push:
@@ -13,43 +13,35 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Clone vcpkg (old compatible version)
-        shell: cmd
-        run: |
-          git clone https://github.com/microsoft/vcpkg.git
-          cd vcpkg
-          git checkout 3b3bd424827a1f7f4813216f6b32b6c61e386b2e
-          bootstrap-vcpkg.bat
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: ''
 
       - name: Install dependencies
-        shell: cmd
         run: |
-          cd vcpkg
           vcpkg install ^
-            boost-system:x86-windows-static ^
-            boost-filesystem:x86-windows-static ^
-            boost-asio:x86-windows-static ^
-            glew:x86-windows-static ^
-            physfs:x86-windows-static ^
-            luajit:x86-windows-static ^
-            zlib:x86-windows-static ^
-            openssl:x86-windows-static ^
-            openal-soft:x86-windows-static ^
-            libzip:x86-windows-static
+            boost-system:x86-windows ^
+            boost-filesystem:x86-windows ^
+            boost-asio:x86-windows ^
+            glew:x86-windows ^
+            physfs:x86-windows ^
+            luajit:x86-windows ^
+            zlib:x86-windows ^
+            openssl:x86-windows ^
+            openal-soft:x86-windows ^
+            libzip:x86-windows
 
       - name: Configure
-        shell: cmd
         run: |
           mkdir build
           cd build
           cmake .. ^
             -G "Visual Studio 17 2022" ^
             -A Win32 ^
-            -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake ^
-            -DUSE_STATIC_LIBS=ON
+            -DCMAKE_TOOLCHAIN_FILE=%VCPKG_ROOT%\scripts\buildsystems\vcpkg.cmake
 
       - name: Build
-        shell: cmd
         run: |
           cd build
           cmake --build . --config Release
