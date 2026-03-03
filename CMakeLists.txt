@@ -1,3 +1,5 @@
+set(CMAKE_POLICY_DEFAULT_CMP0074 NEW)
+set(CMAKE_POLICY_DEFAULT_CMP0167 NEW)
 cmake_minimum_required(VERSION 3.5)
 project(otclient)
 
