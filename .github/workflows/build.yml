@@ -14,14 +14,16 @@ jobs:
       - name: Setup MSYS2
         uses: msys2/setup-msys2@v2
         with:
+          msystem: MINGW64
           update: true
           install: >-
             mingw-w64-x86_64-gcc
             mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-make
             mingw-w64-x86_64-boost
             mingw-w64-x86_64-glew
             mingw-w64-x86_64-physfs
-            mingw-w64-x86_64-lua
+            mingw-w64-x86_64-luajit
             mingw-w64-x86_64-zlib
             mingw-w64-x86_64-openssl
             mingw-w64-x86_64-openal
@@ -33,7 +35,7 @@ jobs:
           mkdir build
           cd build
           cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
-          cmake --build . --config Release
+          mingw32-make -j4
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
