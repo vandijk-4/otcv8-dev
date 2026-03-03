@@ -1,3 +1,5 @@
+set(BZIP2_ROOT "${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static")
+set(BZIP2_USE_STATIC_LIBS ON)
 set(ZLIB_ROOT "${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static")
 set(ZLIB_USE_STATIC_LIBS ON)
 # framework flags
