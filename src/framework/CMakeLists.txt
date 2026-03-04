@@ -249,6 +249,7 @@ if(NOT WASM)
     set(Boost_USE_MULTITHREADED ON)
     set(Boost_USE_STATIC_LIBS ${USE_STATIC_LIBS})
     find_package(Boost 1.67.0 COMPONENTS ${REQUIRED_BOOST_COMPONENTS} REQUIRED)
+    include_directories(${Boost_INCLUDE_DIRS})
 
     #find zip
     find_package(LibZip REQUIRED)
