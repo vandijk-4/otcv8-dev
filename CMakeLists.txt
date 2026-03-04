@@ -32,11 +32,6 @@ set(executable_SOURCES
 )
 
 # add executable icon for win32 platforms
-if(WIN32)
-                       COMMAND ${CMAKE_RC_COMPILER}
-                       -I${CMAKE_CURRENT_SOURCE_DIR}/src
-                       )
-endif()
 
 if(VERSION)
     add_definitions(-D"VERSION=\\"${VERSION}\\"")
