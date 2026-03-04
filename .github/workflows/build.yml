@@ -24,7 +24,7 @@ jobs:
         run: .\vcpkg\vcpkg install boost-asio boost-system boost-iostreams boost-uuid boost-random boost-date-time boost-regex
 
       - name: Configure CMake
-        run: cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake.cmake -A x64
+        run: cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake -A x64
 
       - name: Build
         run: cmake --build build --config Release
