@@ -25,7 +25,7 @@ jobs:
         shell: cmd
         run: |
           cd vcpkg
-          vcpkg install boost-system boost-filesystem boost-asio boost-beast
+          vcpkg install boost-system:x86-windows-static boost-filesystem:x86-windows-static boost-asio:x86-windows-static boost-beast:x86-windows-static glew:x86-windows-static physfs:x86-windows-static luajit:x86-windows-static zlib:x86-windows-static openssl:x86-windows-static openal-soft:x86-windows-static libzip:x86-windows-static
             boost-system:x86-windows-static ^
             boost-filesystem:x86-windows-static ^
             boost-asio:x86-windows-static ^
