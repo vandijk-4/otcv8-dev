@@ -18,9 +18,10 @@ jobs:
         run: git clone https://github.com/microsoft/vcpkg
 
       - name: Bootstrap vcpkg
-      - name: Clean broken ports
-        run: .\vcpkg\vcpkg remove zlib --recurse || echo "zlib not installed"
         run: .\vcpkg\bootstrap-vcpkg.bat
+
+      - name: Clean broken ports
+        run: .\vcpkg\vcpkg remove zlib --recurse || echo zlib-clean
 
       - name: Install dependencies
         run: .\vcpkg\vcpkg install boost-asio boost-system boost-iostreams boost-filesystem boost-thread boost-program-options boost-uuid boost-random boost-date-time boost-regex boost-beast libzip zlib bzip2 luajit physfs openssl openal-soft libvorbis libogg glew
