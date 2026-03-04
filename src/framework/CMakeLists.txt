@@ -1,3 +1,5 @@
+set(PHYSFS_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static/include")
+set(PHYSFS_LIBRARY "${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static/lib/physfs.lib")
 set(LUAJIT_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static/include/luajit-2.1")
 set(LUAJIT_LIBRARY "${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static/lib/lua51.lib")
 set(BZIP2_LIBRARIES "${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static/lib/bz2.lib")
