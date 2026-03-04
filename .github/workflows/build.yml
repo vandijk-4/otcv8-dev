@@ -21,7 +21,7 @@ jobs:
         run: .\vcpkg\bootstrap-vcpkg.bat
 
       - name: Install dependencies
-        run: .\vcpkg\vcpkg install boost-asio boost-system boost-iostreams boost-uuid boost-random boost-date-time boost-regex
+        run: .\vcpkg\vcpkg install boost-asio boost-system boost-iostreams boost-filesystem boost-thread boost-program-options boost-uuid boost-random boost-date-time boost-regex
 
       - name: Configure CMake
         run: cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake -A x64
