@@ -385,6 +385,10 @@ if(FRAMEWORK_GRAPHICS)
             endif()
         endif()
         set(USE_STATIC_LIBS OFF)
+set(GLEW_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static/include)
+
+set(GLEW_LIBRARY ${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static/lib/glew32s.lib)
+
         find_package(GLEW REQUIRED)
         set(USE_STATIC_LIBS ON)
         set(framework_LIBRARIES ${framework_LIBRARIES} ${GLEW_LIBRARY} ${OPENGL_LIBRARIES})
