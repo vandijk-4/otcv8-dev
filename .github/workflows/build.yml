@@ -25,7 +25,7 @@ jobs:
         shell: cmd
         run: |
           cd vcpkg
-          vcpkg install boost-system:x64-windows-static boost-filesystem:x64-windows-static boost-asio:x64-windows-static boost-beast:x64-windows-static glew:x64-windows-static physfs:x64-windows-static luajit:x64-windows-static zlib:x64-windows-static openssl:x64-windows-static openal-soft:x64-windows-static libzip:x64-windows-static
+          vcpkg install boost-system:x64-windows-static boost-filesystem:x64-windows-static boost-asio:x64-windows-static boost-beast:x64-windows-static boost-uuid:x64-windows-static boost-random:x64-windows-static boost-date-time:x64-windows-static boost-regex:x64-windows-static glew:x64-windows-static physfs:x64-windows-static luajit:x64-windows-static zlib:x64-windows-static openssl:x64-windows-static openal-soft:x64-windows-static libzip:x64-windows-static
 
       - name: Configure
         shell: cmd
