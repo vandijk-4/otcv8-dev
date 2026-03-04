@@ -18,6 +18,8 @@ jobs:
         run: git clone https://github.com/microsoft/vcpkg
 
       - name: Bootstrap vcpkg
+      - name: Clean broken ports
+        run: .\vcpkg\vcpkg remove zlib --recurse || echo "zlib not installed"
         run: .\vcpkg\bootstrap-vcpkg.bat
 
       - name: Install dependencies
