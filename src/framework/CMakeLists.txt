@@ -270,6 +270,12 @@ if(NOT WASM)
     message(STATUS "LuaJIT: " ${LUAJIT})
 
     find_package(PhysFS REQUIRED)
+set(OPENSSL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static/include)
+
+set(OPENSSL_LIBRARY ${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static/lib/libssl.lib)
+
+set(OPENSSL_CRYPTO_LIBRARY ${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static/lib/libcrypto.lib)
+
     find_package(OpenSSL REQUIRED)
     find_package(ZLIB REQUIRED)
 
