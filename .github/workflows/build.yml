@@ -24,7 +24,7 @@ jobs:
         run: .\vcpkg\vcpkg remove zlib --recurse || echo zlib-clean
 
       - name: Install dependencies
-        run: .\vcpkg\vcpkg install boost-asio boost-system boost-iostreams boost-filesystem boost-thread boost-program-options boost-uuid boost-random boost-date-time boost-regex boost-beast libzip zlib bzip2 luajit physfs openssl openal-soft libvorbis libogg glew
+          run: .\vcpkg\vcpkg install boost-asio boost-system boost-iostreams boost-filesystem boost-thread boost-program-options boost-uuid boost-random boost-date-time boost-regex boost-beast libzip zlib bzip2 luajit physfs openssl openal-soft libvorbis libogg glew
 
       - name: Configure CMake
         run: cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake -A x64
