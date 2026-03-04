@@ -1,3 +1,5 @@
+set(BZIP2_LIBRARIES "${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static/lib/bz2.lib")
+set(BZIP2_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static/include")
 set(BZIP2_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static/include")
 set(BZIP2_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static/include")
 set(BZIP2_LIBRARIES "${CMAKE_SOURCE_DIR}/vcpkg/installed/x86-windows-static/lib/bz2.lib")
@@ -247,7 +249,7 @@ if(NOT WASM)
     #find zip
     find_package(LibZip REQUIRED)
     find_package(ZLIB REQUIRED)
-    find_package(BZip2 REQUIRED)
+    find_package(BZip2 REQUIRED) REQUIRED)
 
     #find lua
     if(LUAJIT)
