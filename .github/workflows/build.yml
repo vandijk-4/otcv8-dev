@@ -25,7 +25,7 @@ jobs:
         shell: cmd
         run: |
           cd vcpkg
-          vcpkg install ^
+          vcpkg install boost-system boost-filesystem boost-asio boost-beast
             boost-system:x86-windows-static ^
             boost-filesystem:x86-windows-static ^
             boost-asio:x86-windows-static ^
