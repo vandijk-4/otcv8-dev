@@ -37,7 +37,7 @@ if(WIN32)
                        COMMAND ${CMAKE_RC_COMPILER}
                        -I${CMAKE_CURRENT_SOURCE_DIR}/src
                        -i${CMAKE_CURRENT_SOURCE_DIR}/src/otcicon.rc
-                       -o ${CMAKE_CURRENT_BINARY_DIR}/otcicon.res)
+                       )
     set(executable_SOURCES ${executable_SOURCES} otcicon.res)
 endif()
 
