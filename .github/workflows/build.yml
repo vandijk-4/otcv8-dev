@@ -26,15 +26,6 @@ jobs:
         run: |
           cd vcpkg
           vcpkg install boost-system:x86-windows-static boost-filesystem:x86-windows-static boost-asio:x86-windows-static boost-beast:x86-windows-static glew:x86-windows-static physfs:x86-windows-static luajit:x86-windows-static zlib:x86-windows-static openssl:x86-windows-static openal-soft:x86-windows-static libzip:x86-windows-static
-            boost-system:x86-windows-static ^
-            boost-filesystem:x86-windows-static ^
-            boost-asio:x86-windows-static ^
-            glew:x86-windows-static ^
-            physfs:x86-windows-static ^
-            luajit:x86-windows-static ^
-            zlib:x86-windows-static ^
-            openssl:x86-windows-static ^
-            openal-soft:x86-windows-static ^
             libzip:x86-windows-static
 
       - name: Configure
@@ -46,7 +37,6 @@ jobs:
             -G "Visual Studio 17 2022" ^
             -A Win32 ^
             -DCMAKE_TOOLCHAIN_FILE=%CD%\..\vcpkg\scripts\buildsystems\vcpkg.cmake ^
-            -DCMAKE_PREFIX_PATH=%CD%\..\vcpkg\installed\x86-windows-static
             -DCMAKE_PREFIX_PATH=%CD%\..\vcpkg\installed\x86-windows-static
 
       - name: Build
