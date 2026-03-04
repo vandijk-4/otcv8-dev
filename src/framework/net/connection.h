@@ -67,7 +67,7 @@ public:
     ConnectionPtr asConnection() { return static_self_cast<Connection>(); }
 
 protected:
-    void internal_connect(asio::ip::basic_resolver<asio::ip::tcp>::iterator endpointIterator);
+    void internal_connect(asio::ip::basic_resolver<asio::ip::tcp>::results_type endpointIterator);
     void internal_write();
     void onResolve(const boost::system::error_code& error, asio::ip::tcp::resolver::results_type endpointIterator);
     void onConnect(const boost::system::error_code& error);
