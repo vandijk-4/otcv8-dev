@@ -3,55 +3,28 @@ name: Build OTCv8 Windows (CI)
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
-    runs-on: windows-2022
+    runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Clone vcpkg
-      - name: Cache vcpkg
-        uses: actions/cache@v4
-        with:
-          path: vcpkg/installed
-          key: ${{ runner.os }}-vcpkg-${{ hashFiles('**/CMakeLists.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-vcpkg-
-        shell: cmd
-        run: |
-          git clone https://github.com/microsoft/vcpkg.git
-          cd vcpkg
-          bootstrap-vcpkg.bat
-          vcpkg integrate install
+        run: git clone https://github.com/microsoft/vcpkg
+
+      - name: Bootstrap vcpkg
+        run: .\vcpkg\bootstrap-vcpkg.bat
 
       - name: Install dependencies
-        shell: cmd
-        run: |
-          cd vcpkg
-          vcpkg install boost-system:x64-windows-static boost-filesystem:x64-windows-static boost-asio:x64-windows-static boost-beast:x64-windows-static boost-uuid:x64-windows-static boost-random:x64-windows-static boost-date-time:x64-windows-static boost-regex:x64-windows-static glew:x64-windows-static physfs:x64-windows-static luajit:x64-windows-static zlib:x64-windows-static openssl:x64-windows-static openal-soft:x64-windows-static libzip:x64-windows-static
+        run: .\vcpkg\vcpkg install boost-asio boost-system boost-iostreams boost-uuid boost-random boost-date-time boost-regex
 
-      - name: Configure
-        shell: cmd
-        run: |
-          mkdir build
-          cd build
-          cmake .. ^
-            -G "Visual Studio 17 2022" ^
-            -A x64 ^
-            -DCMAKE_TOOLCHAIN_FILE=%CD%\..\vcpkg\scripts\buildsystems\vcpkg.cmake ^
-            -DCMAKE_PREFIX_PATH=%CD%\..\vcpkg\installed\x64-windows-static
+      - name: Configure CMake
+        run: cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake -A x64
 
       - name: Build
-        shell: cmd
-        run: |
-          cd build
-          cmake --build . --config Release
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: otc-client-windows
-          path: build/Release/
+        run: cmake --build build --config Release
