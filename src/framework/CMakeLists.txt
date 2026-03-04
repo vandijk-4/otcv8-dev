@@ -249,7 +249,7 @@ if(NOT WASM)
     #find zip
     find_package(LibZip REQUIRED)
     find_package(ZLIB REQUIRED)
-    find_package(BZip2 REQUIRED) REQUIRED)
+    find_package(BZip2)
 
     #find lua
     if(LUAJIT)
