@@ -22,7 +22,11 @@ jobs:
 
       - name: Install dependencies
         run: >
-          .\vcpkg\vcpkg install
+        run: >
+          .\vcpkg\vcpkg install zlib:x64-windows
+          boost-asio boost-system boost-iostreams boost-filesystem boost-thread boost-program-options
+          boost-uuid boost-random boost-date-time boost-regex boost-beast
+          libzip bzip2 luajit physfs openssl openal-soft libvorbis libogg glew
           boost-asio boost-system boost-iostreams boost-filesystem boost-thread boost-program-options
           boost-uuid boost-random boost-date-time boost-regex boost-beast
           libzip zlib bzip2 luajit physfs openssl openal-soft libvorbis libogg glew
