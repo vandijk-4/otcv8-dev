@@ -31,7 +31,7 @@ jobs:
       - name: Reset broken zlib state (hard-clean)
         shell: cmd
         run: |
-          .\vcpkg\vcpkg remove zlib --recurse | Out-Null
+          .\vcpkg\vcpkg remove zlib --recurse
           Remove-Item -Recurse -Force vcpkg\installed\${env:VCPKG_DEFAULT_TRIPLET} -ErrorAction SilentlyContinue
           Remove-Item -Recurse -Force vcpkg\buildtrees\zlib* -ErrorAction SilentlyContinue
           Remove-Item -Recurse -Force vcpkg\packages\zlib* -ErrorAction SilentlyContinue
