@@ -20,8 +20,11 @@ jobs:
       - name: Bootstrap vcpkg
         run: .\vcpkg\bootstrap-vcpkg.bat
 
-      - name: Install zlib first (fix broken port)
-        run: .\vcpkg\vcpkg install zlib:x64-windows
+      - name: Update vcpkg ports
+        run: |
+          cd vcpkg
+          git pull
+          .\vcpkg update
 
       - name: Install dependencies
         run: >
@@ -29,7 +32,7 @@ jobs:
           boost-asio boost-system boost-iostreams boost-filesystem
           boost-thread boost-program-options boost-uuid boost-random
           boost-date-time boost-regex boost-beast
-          libzip bzip2 luajit physfs openssl openal-soft
+          libzip zlib bzip2 luajit physfs openssl openal-soft
           libvorbis libogg glew
 
       - name: Configure CMake
