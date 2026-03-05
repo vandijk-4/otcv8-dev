@@ -20,16 +20,16 @@ jobs:
         run: git clone --depth 1 https://github.com/microsoft/vcpkg
 
       - name: Bootstrap vcpkg
-        shell: pwsh
+        shell: cmd
         run: .\vcpkg\bootstrap-vcpkg.bat
 
       - name: Update vcpkg ports
-        shell: pwsh
+        shell: cmd
         run: |
           git -C vcpkg pull
 
       - name: Reset broken zlib state (hard-clean)
-        shell: pwsh
+        shell: cmd
         run: |
           .\vcpkg\vcpkg remove zlib --recurse | Out-Null
           Remove-Item -Recurse -Force vcpkg\installed\${env:VCPKG_DEFAULT_TRIPLET} -ErrorAction SilentlyContinue
@@ -37,7 +37,7 @@ jobs:
           Remove-Item -Recurse -Force vcpkg\packages\zlib* -ErrorAction SilentlyContinue
 
       - name: Install dependencies (clean buildtrees/packages)
-        shell: pwsh
+        shell: cmd
         run: >
           .\vcpkg\vcpkg install
           boost-asio boost-system boost-iostreams boost-filesystem boost-thread boost-program-options
@@ -47,7 +47,7 @@ jobs:
           --clean-after-build --clean-buildtrees-after-build --clean-packages-after-build
 
       - name: Configure CMake
-        shell: pwsh
+        shell: cmd
         run: >
           cmake -B build -S .
           -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
@@ -55,5 +55,5 @@ jobs:
           -A x64
 
       - name: Build
-        shell: pwsh
+        shell: cmd
         run: cmake --build build --config Release
