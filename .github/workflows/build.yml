@@ -1,4 +1,5 @@
 name: OTCv8 CI
+
 on:
   push:
     branches: [ main ]
@@ -6,11 +7,21 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2019
     env:
       VCPKG_DISABLE_METRICS: 1
+      VCPKG_ROOT: ${{ github.workspace }}\vcpkg
+      TRIPLET: x86-windows-static
+
     steps:
       - uses: actions/checkout@v4
+
+      - name: Tools for OpenSSL (perl + nasm)
+        shell: powershell
+        run: |
+          choco install -y strawberryperl nasm
+          echo "C:\Strawberry\perl\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          echo "C:\Program Files\NASM"   | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Clone vcpkg (pinned)
         shell: cmd
@@ -23,45 +34,23 @@ jobs:
         shell: cmd
         run: .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
 
-      - name: Select triplet (root OR community)
+      - name: Install dependencies (single command, README list)
         shell: cmd
         run: |
-          if exist vcpkg\triplets\x86-windows-static-md.cmake (
-            echo VCPKG_TARGET_TRIPLET=x86-windows-static-md>> %GITHUB_ENV%
-          ) else if exist vcpkg\triplets\community\x86-windows-static-md.cmake (
-            echo VCPKG_TARGET_TRIPLET=x86-windows-static-md>> %GITHUB_ENV%
-          ) else if exist vcpkg\triplets\x86-windows-static.cmake (
-            echo VCPKG_TARGET_TRIPLET=x86-windows-static>> %GITHUB_ENV%
-          ) else if exist vcpkg\triplets\community\x86-windows-static.cmake (
-            echo VCPKG_TARGET_TRIPLET=x86-windows-static>> %GITHUB_ENV%
-          ) else (
-            echo ERROR: No x86 static triplet found
-            echo --- vcpkg\triplets ---
-            dir vcpkg\triplets
-            echo --- vcpkg\triplets\community ---
-            dir vcpkg\triplets\community
-            exit /b 1
-          )
-          echo Using:
-          type %GITHUB_ENV%
-
-      - name: Install dependencies (single command)
-        shell: cmd
-        run: |
-          echo Triplet = %VCPKG_TARGET_TRIPLET%
           .\vcpkg\vcpkg install ^
-            boost-iostreams boost-asio boost-beast boost-system boost-variant boost-lockfree boost-process boost-program-options ^
-            boost-filesystem boost-uuid ^
-            luajit glew physfs openal-soft libogg libvorbis zlib libzip openssl ^
-            --triplet %VCPKG_TARGET_TRIPLET% ^
+            boost-iostreams:%TRIPLET% boost-asio:%TRIPLET% boost-beast:%TRIPLET% boost-system:%TRIPLET% ^
+            boost-variant:%TRIPLET% boost-lockfree:%TRIPLET% boost-process:%TRIPLET% boost-program-options:%TRIPLET% ^
+            luajit:%TRIPLET% glew:%TRIPLET% boost-filesystem:%TRIPLET% boost-uuid:%TRIPLET% ^
+            physfs:%TRIPLET% openal-soft:%TRIPLET% libogg:%TRIPLET% libvorbis:%TRIPLET% ^
+            zlib:%TRIPLET% libzip:%TRIPLET% openssl:%TRIPLET% ^
             --clean-after-build --clean-buildtrees-after-build --clean-packages-after-build
 
-      - name: Configure (force 32-bit)
+      - name: Configure (Win32 + vcpkg toolchain)
         shell: cmd
         run: |
           cmake -B build -S . -A Win32 ^
-            -DCMAKE_TOOLCHAIN_FILE=.\vcpkg\scripts\buildsystems\vcpkg.cmake ^
-            -DVCPKG_TARGET_TRIPLET=%VCPKG_TARGET_TRIPLET%
+            -DCMAKE_TOOLCHAIN_FILE=%VCPKG_ROOT%\scripts\buildsystems\vcpkg.cmake ^
+            -DVCPKG_TARGET_TRIPLET=%TRIPLET%
 
       - name: Build
         shell: cmd
