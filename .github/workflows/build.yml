@@ -20,10 +20,12 @@ jobs:
       - name: Bootstrap vcpkg
         run: .\vcpkg\bootstrap-vcpkg.bat
 
+      - name: Install zlib first (fix broken port)
+        run: .\vcpkg\vcpkg install zlib:x64-windows
+
       - name: Install dependencies
         run: >
           .\vcpkg\vcpkg install
-          zlib:x64-windows
           boost-asio boost-system boost-iostreams boost-filesystem
           boost-thread boost-program-options boost-uuid boost-random
           boost-date-time boost-regex boost-beast
