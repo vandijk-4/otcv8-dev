@@ -9,7 +9,6 @@ jobs:
     runs-on: windows-latest
     env:
       VCPKG_DISABLE_METRICS: 1
-      VCPKG_TARGET_TRIPLET: x86-windows-static-md
     steps:
       - uses: actions/checkout@v4
 
@@ -24,9 +23,25 @@ jobs:
         shell: cmd
         run: .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
 
-      - name: Install dependencies (single command, pinned triplet)
+      - name: Select triplet (no guessing)
         shell: cmd
         run: |
+          if exist vcpkg\triplets\x86-windows-static-md.cmake (
+            echo VCPKG_TARGET_TRIPLET=x86-windows-static-md>> %GITHUB_ENV%
+          ) else if exist vcpkg\triplets\x86-windows-static.cmake (
+            echo VCPKG_TARGET_TRIPLET=x86-windows-static>> %GITHUB_ENV%
+          ) else (
+            echo ERROR: No x86 static triplet found
+            dir vcpkg\triplets
+            exit /b 1
+          )
+          echo Using triplet:
+          type %GITHUB_ENV%
+
+      - name: Install dependencies (single command)
+        shell: cmd
+        run: |
+          echo Triplet = %VCPKG_TARGET_TRIPLET%
           .\vcpkg\vcpkg install ^
             boost-iostreams boost-asio boost-beast boost-system boost-variant boost-lockfree boost-process boost-program-options ^
             boost-filesystem boost-uuid ^
@@ -34,7 +49,7 @@ jobs:
             --triplet %VCPKG_TARGET_TRIPLET% ^
             --clean-after-build --clean-buildtrees-after-build --clean-packages-after-build
 
-      - name: Configure (FORCE 32-bit generator)
+      - name: Configure (force 32-bit)
         shell: cmd
         run: |
           cmake -B build -S . -A Win32 ^
