@@ -3,48 +3,55 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: windows-latest
+    env:
+      VCPKG_DISABLE_METRICS: 1
+      VCPKG_TARGET_TRIPLET: x86-windows-static-md
     steps:
       - uses: actions/checkout@v4
-      - name: Clone correct vcpkg
+
+      - name: Clone vcpkg (pinned)
         shell: cmd
         run: |
           git clone https://github.com/microsoft/vcpkg
           cd vcpkg
           git checkout 3b3bd424827a1f7f4813216f6b32b6c61e386b2e
+
       - name: Bootstrap vcpkg
         shell: cmd
-        run: .\vcpkg\bootstrap-vcpkg.bat
-      - name: Install dependencies
+        run: .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
+
+      - name: Install dependencies (single command, pinned triplet)
         shell: cmd
         run: |
           .\vcpkg\vcpkg install ^
-          boost-iostreams:x86-windows-static ^
-          boost-asio:x86-windows-static ^
-          boost-beast:x86-windows-static ^
-          boost-system:x86-windows-static ^
-          boost-variant:x86-windows-static ^
-          boost-lockfree:x86-windows-static ^
-          boost-process:x86-windows-static ^
-          boost-program-options:x86-windows-static ^
-          luajit:x86-windows-static ^
-          glew:x86-windows-static ^
-          boost-filesystem:x86-windows-static ^
-          boost-uuid:x86-windows-static ^
-          physfs:x86-windows-static ^
-          openal-soft:x86-windows-static ^
-          libogg:x86-windows-static ^
-          libvorbis:x86-windows-static ^
-          zlib:x86-windows-static ^
-          libzip:x86-windows-static ^
-          openssl:x86-windows
-      - name: Configure
+            boost-iostreams boost-asio boost-beast boost-system boost-variant boost-lockfree boost-process boost-program-options ^
+            boost-filesystem boost-uuid ^
+            luajit glew physfs openal-soft libogg libvorbis zlib libzip openssl ^
+            --triplet %VCPKG_TARGET_TRIPLET% ^
+            --clean-after-build --clean-buildtrees-after-build --clean-packages-after-build
+
+      - name: Configure (FORCE 32-bit generator)
         shell: cmd
         run: |
-          cmake -B build -S . ^
-          -DCMAKE_TOOLCHAIN_FILE=.\vcpkg\scripts\buildsystems\vcpkg.cmake
+          cmake -B build -S . -A Win32 ^
+            -DCMAKE_TOOLCHAIN_FILE=.\vcpkg\scripts\buildsystems\vcpkg.cmake ^
+            -DVCPKG_TARGET_TRIPLET=%VCPKG_TARGET_TRIPLET%
+
       - name: Build
         shell: cmd
         run: cmake --build build --config Release
+
+      - name: Upload vcpkg logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vcpkg-logs
+          path: |
+            vcpkg/buildtrees/**/config*.log
+            vcpkg/buildtrees/**/build*.log
+            vcpkg/buildtrees/**/install*.log
+            vcpkg/buildtrees/**/*.log
