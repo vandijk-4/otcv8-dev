@@ -1,4 +1,4 @@
-name: Build OTCv8 Windows
+name: OTCv8 CI
 
 on:
 push:
@@ -7,15 +7,17 @@ workflow_dispatch:
 
 jobs:
 build:
-runs-on: windows-latest
+runs-on: windows-2019
 
 steps:
-  - name: Checkout
-    uses: actions/checkout@v4
+  - uses: actions/checkout@v4
 
-  - name: Clone vcpkg
+  - name: Clone correct vcpkg
     shell: cmd
-    run: git clone https://github.com/microsoft/vcpkg
+    run: |
+      git clone https://github.com/microsoft/vcpkg
+      cd vcpkg
+      git checkout 3b3bd424827a1f7f4813216f6b32b6c61e386b2e
 
   - name: Bootstrap vcpkg
     shell: cmd
@@ -23,33 +25,34 @@ steps:
 
   - name: Install dependencies
     shell: cmd
-    run: >
-      .\vcpkg\vcpkg install
-      boost-asio boost-system boost-filesystem boost-beast
-      libzip zlib bzip2 luajit physfs openssl
-      openal-soft libvorbis libogg glew
-      --triplet x64-windows
+    run: |
+      .\vcpkg\vcpkg install boost-iostreams:x86-windows-static
+      .\vcpkg\vcpkg install boost-asio:x86-windows-static
+      .\vcpkg\vcpkg install boost-beast:x86-windows-static
+      .\vcpkg\vcpkg install boost-system:x86-windows-static
+      .\vcpkg\vcpkg install boost-variant:x86-windows-static
+      .\vcpkg\vcpkg install boost-lockfree:x86-windows-static
+      .\vcpkg\vcpkg install boost-process:x86-windows-static
+      .\vcpkg\vcpkg install boost-program-options:x86-windows-static
+      .\vcpkg\vcpkg install luajit:x86-windows-static
+      .\vcpkg\vcpkg install glew:x86-windows-static
+      .\vcpkg\vcpkg install boost-filesystem:x86-windows-static
+      .\vcpkg\vcpkg install boost-uuid:x86-windows-static
+      .\vcpkg\vcpkg install physfs:x86-windows-static
+      .\vcpkg\vcpkg install openal-soft:x86-windows-static
+      .\vcpkg\vcpkg install libogg:x86-windows-static
+      .\vcpkg\vcpkg install libvorbis:x86-windows-static
+      .\vcpkg\vcpkg install zlib:x86-windows-static
+      .\vcpkg\vcpkg install libzip:x86-windows-static
+      .\vcpkg\vcpkg install openssl:x86-windows-static
 
   - name: Configure
     shell: cmd
-    run: >
-      cmake -B build -S .
+    run: |
+      cmake -B build -S . ^
       -DCMAKE_TOOLCHAIN_FILE=.\vcpkg\scripts\buildsystems\vcpkg.cmake
-      -DVCPKG_TARGET_TRIPLET=x64-windows
 
   - name: Build
     shell: cmd
     run: cmake --build build --config Release
-
-  - name: Package build
-    shell: cmd
-    run: |
-      mkdir artifact
-      xcopy build\Release artifact /E /I
-
-  - name: Upload artifact
-    uses: actions/upload-artifact@v4
-    with:
-      name: otc-client-windows
-      path: artifact
 
