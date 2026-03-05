@@ -1,55 +1,55 @@
-name: Build OTCv8 Windows (CI)
+name: Build OTCv8 Windows
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+push:
+branches: [ main ]
+workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: windows-latest
-    env:
-      VCPKG_DEFAULT_TRIPLET: x64-windows-static
+build:
+runs-on: windows-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+steps:
+  - name: Checkout
+    uses: actions/checkout@v4
 
-      - name: Clone vcpkg
-        run: git clone --depth 1 https://github.com/microsoft/vcpkg
+  - name: Clone vcpkg
+    shell: cmd
+    run: git clone https://github.com/microsoft/vcpkg
 
-      - name: Bootstrap vcpkg
-        - name: Clean vcpkg installed
-          shell: cmd
-          run: rmdir /s /q vcpkg\installed || echo clean
-        shell: cmd
-        run: .\vcpkg\bootstrap-vcpkg.bat
+  - name: Bootstrap vcpkg
+    shell: cmd
+    run: .\vcpkg\bootstrap-vcpkg.bat
 
-      - name: Update vcpkg ports
-        shell: cmd
-        run: |
-          git -C vcpkg pull
+  - name: Install dependencies
+    shell: cmd
+    run: >
+      .\vcpkg\vcpkg install
+      boost-asio boost-system boost-filesystem boost-beast
+      libzip zlib bzip2 luajit physfs openssl
+      openal-soft libvorbis libogg glew
+      --triplet x64-windows
 
+  - name: Configure
+    shell: cmd
+    run: >
+      cmake -B build -S .
+      -DCMAKE_TOOLCHAIN_FILE=.\vcpkg\scripts\buildsystems\vcpkg.cmake
+      -DVCPKG_TARGET_TRIPLET=x64-windows
 
-      - name: Install dependencies (clean buildtrees/packages)
-        shell: cmd
-        run: >
-          .\vcpkg\vcpkg install
-          boost-asio boost-system boost-iostreams boost-filesystem boost-thread boost-program-options
-          boost-uuid boost-random boost-date-time boost-regex boost-beast
-          libzip zlib bzip2 luajit physfs openssl openal-soft libvorbis libogg glew
-          --triplet x64-windows-static
-          --clean-after-build --clean-buildtrees-after-build --clean-packages-after-build
+  - name: Build
+    shell: cmd
+    run: cmake --build build --config Release
 
-      - name: Configure CMake
-        shell: cmd
-        run: >
-          cmake -B build -S .
-          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
-          -DVCPKG_TARGET_TRIPLET=x64-windows-static
-          -A x64
+  - name: Package build
+    shell: cmd
+    run: |
+      mkdir artifact
+      xcopy build\Release artifact /E /I
 
-      - name: Build
-        shell: cmd
-        run: cmake --build build --config Release
+  - name: Upload artifact
+    uses: actions/upload-artifact@v4
+    with:
+      name: otc-client-windows
+      path: artifact
+
