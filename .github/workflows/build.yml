@@ -44,7 +44,7 @@ jobs:
           .\vcpkg\vcpkg install libvorbis:x86-windows-static
           .\vcpkg\vcpkg install zlib:x86-windows-static
           .\vcpkg\vcpkg install libzip:x86-windows-static
-          .\vcpkg\vcpkg install openssl:x86-windows-static
+          .\vcpkg\vcpkg install openssl:x86-windows
 
       - name: Configure
         shell: cmd
