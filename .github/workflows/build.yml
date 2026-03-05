@@ -20,6 +20,9 @@ jobs:
         run: git clone --depth 1 https://github.com/microsoft/vcpkg
 
       - name: Bootstrap vcpkg
+        - name: Clean vcpkg installed
+          shell: cmd
+          run: rmdir /s /q vcpkg\installed || echo clean
         shell: cmd
         run: .\vcpkg\bootstrap-vcpkg.bat
 
