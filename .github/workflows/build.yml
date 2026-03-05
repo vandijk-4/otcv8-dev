@@ -1,28 +1,22 @@
 name: OTCv8 CI
-
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Clone correct vcpkg
         shell: cmd
         run: |
           git clone https://github.com/microsoft/vcpkg
           cd vcpkg
           git checkout 3b3bd424827a1f7f4813216f6b32b6c61e386b2e
-
       - name: Bootstrap vcpkg
         shell: cmd
         run: .\vcpkg\bootstrap-vcpkg.bat
-
       - name: Install dependencies
         shell: cmd
         run: |
@@ -46,13 +40,11 @@ jobs:
           zlib:x86-windows-static ^
           libzip:x86-windows-static ^
           openssl:x86-windows
-
       - name: Configure
         shell: cmd
         run: |
           cmake -B build -S . ^
           -DCMAKE_TOOLCHAIN_FILE=.\vcpkg\scripts\buildsystems\vcpkg.cmake
-
       - name: Build
         shell: cmd
         run: cmake --build build --config Release
