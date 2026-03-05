@@ -23,19 +23,26 @@ jobs:
         shell: cmd
         run: .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
 
-      - name: Select triplet (no guessing)
+      - name: Select triplet (root OR community)
         shell: cmd
         run: |
           if exist vcpkg\triplets\x86-windows-static-md.cmake (
             echo VCPKG_TARGET_TRIPLET=x86-windows-static-md>> %GITHUB_ENV%
+          ) else if exist vcpkg\triplets\community\x86-windows-static-md.cmake (
+            echo VCPKG_TARGET_TRIPLET=x86-windows-static-md>> %GITHUB_ENV%
           ) else if exist vcpkg\triplets\x86-windows-static.cmake (
+            echo VCPKG_TARGET_TRIPLET=x86-windows-static>> %GITHUB_ENV%
+          ) else if exist vcpkg\triplets\community\x86-windows-static.cmake (
             echo VCPKG_TARGET_TRIPLET=x86-windows-static>> %GITHUB_ENV%
           ) else (
             echo ERROR: No x86 static triplet found
+            echo --- vcpkg\triplets ---
             dir vcpkg\triplets
+            echo --- vcpkg\triplets\community ---
+            dir vcpkg\triplets\community
             exit /b 1
           )
-          echo Using triplet:
+          echo Using:
           type %GITHUB_ENV%
 
       - name: Install dependencies (single command)
