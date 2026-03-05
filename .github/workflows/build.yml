@@ -26,25 +26,26 @@ jobs:
       - name: Install dependencies
         shell: cmd
         run: |
-          .\vcpkg\vcpkg install boost-iostreams:x86-windows-static
-          .\vcpkg\vcpkg install boost-asio:x86-windows-static
-          .\vcpkg\vcpkg install boost-beast:x86-windows-static
-          .\vcpkg\vcpkg install boost-system:x86-windows-static
-          .\vcpkg\vcpkg install boost-variant:x86-windows-static
-          .\vcpkg\vcpkg install boost-lockfree:x86-windows-static
-          .\vcpkg\vcpkg install boost-process:x86-windows-static
-          .\vcpkg\vcpkg install boost-program-options:x86-windows-static
-          .\vcpkg\vcpkg install luajit:x86-windows-static
-          .\vcpkg\vcpkg install glew:x86-windows-static
-          .\vcpkg\vcpkg install boost-filesystem:x86-windows-static
-          .\vcpkg\vcpkg install boost-uuid:x86-windows-static
-          .\vcpkg\vcpkg install physfs:x86-windows-static
-          .\vcpkg\vcpkg install openal-soft:x86-windows-static
-          .\vcpkg\vcpkg install libogg:x86-windows-static
-          .\vcpkg\vcpkg install libvorbis:x86-windows-static
-          .\vcpkg\vcpkg install zlib:x86-windows-static
-          .\vcpkg\vcpkg install libzip:x86-windows-static
-          .\vcpkg\vcpkg install openssl:x86-windows
+          .\vcpkg\vcpkg install ^
+          boost-iostreams:x86-windows-static ^
+          boost-asio:x86-windows-static ^
+          boost-beast:x86-windows-static ^
+          boost-system:x86-windows-static ^
+          boost-variant:x86-windows-static ^
+          boost-lockfree:x86-windows-static ^
+          boost-process:x86-windows-static ^
+          boost-program-options:x86-windows-static ^
+          luajit:x86-windows-static ^
+          glew:x86-windows-static ^
+          boost-filesystem:x86-windows-static ^
+          boost-uuid:x86-windows-static ^
+          physfs:x86-windows-static ^
+          openal-soft:x86-windows-static ^
+          libogg:x86-windows-static ^
+          libvorbis:x86-windows-static ^
+          zlib:x86-windows-static ^
+          libzip:x86-windows-static ^
+          openssl:x86-windows
 
       - name: Configure
         shell: cmd
